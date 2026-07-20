@@ -1,0 +1,20 @@
+{
+  "name": "hacp",
+  "interface": {
+    "displayName": "Human-Agent Control Protocol"
+  },
+  "plugins": [
+    {
+      "name": "hacp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/hacp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
