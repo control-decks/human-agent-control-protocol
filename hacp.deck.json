@@ -1,0 +1,34 @@
+{
+  "hacp": "0.3",
+  "deck": {
+    "id": "hacp",
+    "version": "0.1.0",
+    "publisher": "Control Decks"
+  },
+  "cards": [
+    {
+      "id": "hacp/author-card",
+      "command": "hacp-author-card",
+      "kind": "operation",
+      "mode": "artifact",
+      "traits": ["authoring", "artifact"],
+      "defaultBinding": "target-or-current-card-subject",
+      "accepts": ["hacp/content", "hacp/result"],
+      "produces": "hacp/card-definition",
+      "duration": "once",
+      "relations": {}
+    },
+    {
+      "id": "hacp/author-deck",
+      "command": "hacp-author-deck",
+      "kind": "operation",
+      "mode": "artifact",
+      "traits": ["authoring", "artifact"],
+      "defaultBinding": "target-or-current-deck-subject",
+      "accepts": ["hacp/content", "hacp/result"],
+      "produces": "hacp/deck-definition",
+      "duration": "once",
+      "relations": {}
+    }
+  ]
+}

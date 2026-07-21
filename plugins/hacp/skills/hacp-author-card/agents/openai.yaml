@@ -1,0 +1,4 @@
+interface:
+  display_name: "HACP Author Card"
+  short_description: "Author a compatible HACP card contract"
+  default_prompt: "Use $hacp-author-card to author this HACP card."
