@@ -1,7 +1,7 @@
 {
   "name": "hacp",
-  "version": "0.2.0",
-  "description": "Canonical resolver and deck-authoring guidance for the Human-Agent Control Protocol.",
+  "version": "0.3.0",
+  "description": "Canonical session protocol and deck-authoring guidance for the Human-Agent Control Protocol.",
   "author": {
     "name": "thevzion",
     "url": "https://github.com/thevzion"

@@ -1,6 +1,0 @@
-interface:
-  display_name: "HACP"
-  short_description: "Resolve and audit HACP card flows"
-  icon_small: "assets/icon.png"
-  brand_color: "#C99045"
-  default_prompt: "Use $resolver to explain or audit this card flow."
