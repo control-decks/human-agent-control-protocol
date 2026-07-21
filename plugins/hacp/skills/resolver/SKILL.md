@@ -1,6 +1,6 @@
 ---
-name: hacp
-description: Resolve, explain, or audit Human-Agent Control Protocol card flows and deck contracts. Use when the user invokes HACP, combines cards from HACP decks, asks how Binding or Working Object transfer works, or needs a deck checked against HACP Draft 0.3. Delegate explicit card and deck authoring to hacp-author-card and hacp-author-deck.
+name: resolver
+description: Resolve, explain, or audit Human-Agent Control Protocol card flows and deck contracts. Use when the user invokes HACP, combines cards from HACP decks, asks how Binding or Working Object transfer works, or needs a deck checked against HACP Draft 0.3. Delegate explicit card and deck authoring to author-card and author-deck.
 ---
 
 # HACP Resolver
@@ -68,7 +68,7 @@ Never treat approval as authority to bypass a blocking control.
 
 ## Audit a deck
 
-Require one root skill, narrow card contracts, help, provider manifests, and
+Require one `resolver` or `deck` support skill, narrow card contracts, `help`, provider manifests, and
 `hacp.deck.json`. Each card declares:
 
 ```text
@@ -85,6 +85,12 @@ Format
 Use canonical `deck/card` identifiers. Use exact identifiers for closed
 relations and traits or result kinds for open compatibility. Keep the deck
 self-contained. Do not require this skill as a runtime dependency.
+
+Require provider projection to stay mechanical: plugin namespace equals the
+deck slug; card skill folder, skill `name`, and manifest `command` equal the
+card slug without repeating the deck; Codex displays `Deck · Card`. Reserve
+`deck`, `help`, and `resolver` for support skills and exclude them from
+`hacp.deck.json`.
 
 When HACP itself is the subject, explain or audit the requested part. Otherwise
 add no protocol tutorial to the card result.

@@ -1,6 +1,6 @@
 ---
-name: hacp-author-card
-description: Author a new or existing HACP-compatible card from an optional semantic target such as a URL, path, name, slug, manifest, or Working Object. Use when the user invokes hacp-author-card or explicitly asks to create, revise, or complete a HACP card contract.
+name: author-card
+description: Author a new or existing HACP-compatible card from an optional semantic target such as a URL, path, name, slug, manifest, or Working Object. Use when the user invokes author-card or explicitly asks to create, revise, or complete a HACP card contract.
 ---
 
 # 🃏 HACP Author Card
@@ -34,8 +34,10 @@ write files. Do not add a runtime dependency on the canonical HACP plugin.
 4. Define `Use when`, `Default binding`, `Accepts`, `Effect`, `Result`,
    `Duration`, `Limits`, and `Format`. Add `Flow` only when branching would
    otherwise remain ambiguous.
-5. Give the card one HACP kind and mode, stable `deck/card` identity, provider
-   command, traits, one produced kind or family, and only necessary relations.
+5. Give the card one HACP kind and mode, stable `deck/card` identity, traits,
+   one produced kind or family, and only necessary relations. Project it to
+   providers with plugin namespace `deck`, local skill folder/name and manifest
+   `command` equal to `card`, and Codex display label `Deck · Card`.
 6. When repository output is already authorized, update only the skill,
    manifest, provider metadata, help, and user documentation required to make
    the card usable. Otherwise return the complete definition in chat.

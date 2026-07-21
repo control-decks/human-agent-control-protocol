@@ -1,6 +1,6 @@
 ---
-name: hacp-author-deck
-description: Author a new or existing HACP-compatible deck from an optional semantic target such as a URL, path, name, slug, manifest, or Working Object. Use when the user invokes hacp-author-deck or explicitly asks to create, revise, or complete a HACP deck contract.
+name: author-deck
+description: Author a new or existing HACP-compatible deck from an optional semantic target such as a URL, path, name, slug, manifest, or Working Object. Use when the user invokes author-deck or explicitly asks to create, revise, or complete a HACP deck contract.
 ---
 
 # 🗃️ HACP Author Deck
@@ -33,9 +33,13 @@ write files. Do not make the canonical HACP plugin a runtime dependency.
 4. Define one purpose, a deck-local mental model, a minimal shared resolver,
    narrow card contracts, a help utility, `hacp.deck.json`, provider manifests,
    installation instructions, and only the README material users need.
+   Name support skills `deck` and `help` (`resolver` for the canonical HACP
+   plugin) and exclude them from the card manifest.
 5. Keep every card self-contained with one primary effect. Use exact slugs for
    closed relations and traits, result families, or annotations for open
-   compatibility.
+   compatibility. Use the deck slug as provider namespace, each card slug as
+   its skill folder/name and manifest command, and `Deck · Card` for Codex
+   display labels.
 6. When repository output is already authorized, author and validate the
    required files in place. Otherwise return the complete deck definition in
    chat.

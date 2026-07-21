@@ -1,4 +1,4 @@
 interface:
   display_name: "HACP"
   short_description: "Resolve and audit HACP card flows"
-  default_prompt: "Use $hacp to explain or audit this card flow."
+  default_prompt: "Use $resolver to explain or audit this card flow."

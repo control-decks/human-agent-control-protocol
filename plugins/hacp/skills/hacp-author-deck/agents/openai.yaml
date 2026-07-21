@@ -1,4 +1,0 @@
-interface:
-  display_name: "HACP Author Deck"
-  short_description: "Author a compatible HACP deck contract"
-  default_prompt: "Use $hacp-author-deck to author this HACP deck."
