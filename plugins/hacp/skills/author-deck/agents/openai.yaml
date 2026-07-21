@@ -1,4 +1,6 @@
 interface:
   display_name: "HACP · Author Deck"
   short_description: "Author a compatible HACP deck contract"
+  icon_small: "assets/icon.png"
+  brand_color: "#C99045"
   default_prompt: "Use $author-deck to author this HACP deck."
