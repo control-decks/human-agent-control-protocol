@@ -4,3 +4,5 @@ interface:
   icon_small: "assets/icon.png"
   brand_color: "#C99045"
   default_prompt: "Use $author-card to author this HACP card."
+policy:
+  allow_implicit_invocation: false

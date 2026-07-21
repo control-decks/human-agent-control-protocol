@@ -1,53 +1,49 @@
 ---
 name: author-deck
-description: Author a new or existing HACP-compatible deck from an optional semantic target such as a URL, path, name, slug, manifest, or Working Object. Use when the user invokes author-deck or explicitly asks to create, revise, or complete a HACP deck contract.
+description: Author a new or existing HACP-compatible deck from an optional semantic target such as a URL, path, name, slug, manifest, or Working Object.
+disable-model-invocation: true
 ---
 
-# 🗃️ HACP Author Deck
+# HACP Author Deck
 
-**Use when:** A HACP deck needs to be created or authored against an existing
-deck or repository.
-**Default binding:** The optional semantic target, then the current deck
-subject. With neither, author a new deck from the user's stated purpose.
-**Accepts:** Human content or any HACP result that contains a deck intention,
-contract, repository, manifest, or reference.
-**Effect:** Resolve the target when present, recover existing conventions, and
-author the smallest self-contained deck that serves one clear purpose.
-**Result:** A `hacp/deck-definition` delivered in the surface the user
-requested: chat, document, or repository.
-**Duration:** One agent turn.
-**Limits:** Do not invent a target parser, silently choose among ambiguous
-targets, scaffold speculative components, or treat invocation as permission to
-write files. Do not make the canonical HACP plugin a runtime dependency.
+**ID:** `hacp/author-deck`\
+**HACP:** `0.4`\
+**Kind:** `operation`\
+**Mode:** `artifact`\
+**Traits:** `authoring`, `artifact`\
+**Default Binding:** Optional semantic target, current deck subject, then the
+human's stated purpose\
+**Accepts:** `hacp/content`, `hacp/result`\
+**Requires:** `hacp/authoring-intent`; missing detail may resolve as a focused
+`pending` clarification\
+**Produces:** `hacp/deck-definition`\
+**Duration:** `once`
 
-## Authoring contract
+**Effect:** Resolve an optional semantic target, recover applicable
+conventions, and author the smallest coherent deck in the requested chat,
+document, or repository surface.
 
-1. Treat the text following the invocation as a semantic target, not typed
-   arguments. Resolve a URL, path, name, slug, manifest, or available Working
-   Object with the current tools and context.
-2. If the explicit target is ambiguous, ask one focused question. If it cannot
-   be resolved, return `blocked` and name the missing target. With no target,
-   author a new deck.
-3. Preserve an existing deck's identifiers and conventions unless the user
-   explicitly requests a migration.
-4. Define one purpose, a deck-local mental model, a minimal shared resolver,
-   narrow card contracts, a help utility, `hacp.deck.json`, provider manifests,
-   installation instructions, and only the README material users need.
-   Name support skills `deck` and `help` (`resolver` for the canonical HACP
-   plugin) and exclude them from the card manifest.
-5. Keep every card self-contained with one primary effect. Use exact slugs for
-   closed relations and traits, result families, or annotations for open
-   compatibility. Use the deck slug as provider namespace, each card slug as
-   its skill folder/name and manifest command, and `Deck · Card` for Codex
-   display labels.
-6. When repository output is already authorized, author and validate the
-   required files in place. Otherwise return the complete deck definition in
-   chat.
+**Limits:** Treat a URL, path, name, slug, manifest, or Working Object as a
+semantic target, never typed arguments. Ask once when a target is ambiguous;
+return `blocked` when an explicit target remains unavailable. Invocation alone
+never grants write authority. Do not add speculative runtime, storage,
+transport, or permission machinery.
 
-## Format
+## Author
 
-Begin the complete combo trace with
-`> 🎯 **<target or new deck>** → 🗃️ **AUTHOR DECK**`.
+1. Preserve existing identifiers unless the human requests a migration. With
+   no target, start from one clear deck purpose.
+2. Define a namespace, standalone cards, `hacp.deck.json`, provider manifests,
+   installation instructions, and the smallest useful README. Add `help` or a
+   mental model only when users or cards need it.
+3. Never create a root resolver skill. Full conformance comes from a compatible
+   HACP session adapter.
+4. Make every card human-only and keep one primary effect. Use exact card IDs
+   only for indispensable same-deck mechanics; use open interfaces for all
+   other compatibility.
+5. When repository output is authorized, author and validate only the files
+   required to make the deck usable.
 
-Return the smallest complete artifact. Do not add runtime, storage, transport,
-or permission machinery unless the user explicitly asks for it.
+Begin the combo trace with
+`> 🎯 **<target or new deck>** → 🗃️ **AUTHOR DECK**` and return the smallest
+complete artifact.

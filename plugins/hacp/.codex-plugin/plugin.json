@@ -1,7 +1,7 @@
 {
   "name": "hacp",
-  "version": "0.2.0",
-  "description": "Canonical resolver and deck-authoring guidance for the Human-Agent Control Protocol.",
+  "version": "0.3.0",
+  "description": "Canonical session protocol and deck-authoring guidance for the Human-Agent Control Protocol.",
   "author": {
     "name": "thevzion",
     "url": "https://github.com/thevzion"
@@ -17,18 +17,19 @@
     "protocol"
   ],
   "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
   "interface": {
     "displayName": "HACP",
-    "shortDescription": "Resolve, audit, and author HACP cards.",
-    "longDescription": "The canonical Human-Agent Control Protocol plugin for resolving ordered card flows, auditing decks, and authoring compatible cards and decks.",
+    "shortDescription": "Load, audit, and author HACP cards.",
+    "longDescription": "The canonical Human-Agent Control Protocol session adapter for ordered card flows, deck audits, and compatible card authoring.",
     "developerName": "Control Decks",
     "category": "Productivity",
-    "capabilities": [],
+    "capabilities": ["Instructions", "Lifecycle hooks"],
     "brandColor": "#C99045",
     "composerIcon": "./assets/icon.png",
     "logo": "./assets/logo.png",
     "defaultPrompt": [
-      "$hacp:resolver Explain this card flow.",
+      "$hacp:protocol Explain this card flow.",
       "$hacp:author-card Author a HACP card for this behavior.",
       "$hacp:author-deck Author a HACP deck for this purpose."
     ]

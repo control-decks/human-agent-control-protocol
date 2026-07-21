@@ -2,111 +2,47 @@
 
 **Cards are the interface. Control is the protocol.**
 
-Draft `0.3`
+Draft `0.4`
 
-HACP gives people a visible way to direct how an AI agent thinks, checks, and
-acts. A card carries one reusable instruction. A deck gives related cards a
-shared purpose. HACP defines how cards bind to material, pass results, combine,
-persist, block, and clear.
+HACP is the semantic protocol behind Control Decks. It lets a human play
+explicit commands that bind to material, pass one Working Object, combine with
+other cards, and govern agent behavior without rewriting the same instructions.
 
-## Control you can see
+## One payload, then explicit cards
 
-Suppose `READ ONLY` is active and you ask the agent to implement a change:
-
-```text
-$work-this-way:read-only
-+ $work-this-way:implement
-+ $think-it-through:explain
-```
-
-A conforming agent blocks the mutation before calling a mutating tool, then
-passes that blocked result to `EXPLAIN`:
+The HACP plugin loads one compact protocol payload when a session starts. It
+does not play a card and does not change ordinary conversation. Cards remain
+explicit human commands:
 
 ```text
-> 🛠 WORK · BLOCKED · READ ONLY · READ ONLY → IMPLEMENT → THINK EXPLAIN
-
-No mutation occurred. READ ONLY forbids the change until you clear the active
-Work This Way controls.
+$deck-a:prepare
+→ $deck-b:inspect
++ $deck-c:present
 ```
 
-The compact line shows both resolution and the state that will govern the next
-exchange. The response contains the final useful result rather than a report
-for every intermediate step.
+The agent preflights the complete stream, resolves it in written order, and
+returns the smallest useful final result. `+` denotes a presentation of the
+same semantic object; `→` passes the object into another operation.
 
-## One object, multiple decks
-
-Cards pass a **Working Object** from left to right. The object can cross deck
-boundaries:
+## The shared envelope
 
 ```text
-accepted direction
-→ THINK TO PLAN
-→ plan
-→ REALITY CHECK TARGETS
-→ checked plan
-→ WORK IMPLEMENT
-→ implementation result
-→ THINK EXPLAIN
-→ explanation
+Binding + Working Object + Active Controls
 ```
 
-Three pieces stay visible throughout the flow:
+- **Binding** says what a card acts on.
+- **Working Object** carries the current kind, content, status, annotations,
+  and provenance.
+- **Active Controls** govern effects and tool calls before they occur.
 
-| Part | Meaning |
-| --- | --- |
-| **Binding** | What the cards apply to |
-| **Working Object** | The result passed to the next card |
-| **Active Controls** | The constraints governing resolution |
+Annotations carry their own Binding and provenance. They can travel with a
+derived result without pretending that the derived result was itself checked.
+Presentations render an object without replacing what a later operation
+receives.
 
-Each deck keeps its own mental model. Decks share the Working Object, resolved
-Binding, and active controls.
+## Install the session adapter
 
-## The grammar
-
-HACP defines four mechanical roles:
-
-| Role | Purpose |
-| --- | --- |
-| `binding` | Select what later cards apply to |
-| `control` | Activate, qualify, or clear control state |
-| `operation` | Transform, annotate, or act on the Working Object |
-| `presentation` | Change representation without changing substance |
-
-Prose and explicit card invocations form an ordered stream. Position carries
-meaning. A leading card acts on following material or the available object. A
-card after prose consumes that prose. A card between blocks transforms the
-object at that point.
-
-The agent validates the complete stream before applying an effect. It never
-reorders cards silently. An invalid combo produces no effect.
-
-Read the normative [HACP Draft 0.3 specification](SPEC.md) for identifiers,
-result states, lifecycle rules, manifests, and conformance requirements.
-
-## Decks
-
-- [Think It Through](https://github.com/control-decks/think-it-through) shapes
-  and develops thought.
-- [Reality Check](https://github.com/control-decks/reality-check) verifies
-  targets, sources, and assumptions without replacing the object.
-- [Work This Way](https://github.com/control-decks/work-this-way) applies
-  session controls and explicit action cards.
-
-You can install one deck or combine several. Each deck remains self-contained.
-
-## Optional HACP skill
-
-The `hacp` plugin supplies the canonical resolver, deck auditing, and two
-authoring cards. Decks do not require it at runtime.
-
-| Card | Use it to |
-| --- | --- |
-| `HACP AUTHOR CARD` | Create a card or author against an existing card or deck |
-| `HACP AUTHOR DECK` | Create a deck or author against an existing deck |
-
-Both cards accept an optional semantic target: a URL, path, name, slug,
-manifest, or available Working Object. With no target, they author a new
-artifact. The invocation alone never grants permission to modify files.
+Install HACP once, then install any compatible decks you want to use.
 
 ### Codex
 
@@ -115,8 +51,14 @@ codex plugin marketplace add control-decks/human-agent-control-protocol
 codex plugin add hacp@hacp
 ```
 
-Use `$hacp:resolver` to explain or audit a flow, or invoke
-`$hacp:author-card` and `$hacp:author-deck` to author an artifact.
+Codex requires explicit trust for non-managed plugin hooks. Review the HACP
+hook when prompted, or use `/hooks` where that command is available. A skipped
+hook means the session must not claim HACP conformance.
+
+Invoke `$hacp:protocol` directly to explain or audit HACP. The session hook
+loads the same skill body automatically; it does not maintain separate rules.
+On delegation, `SubagentStart` reloads that payload while the parent passes the
+current object and active controls in the delegated task.
 
 ### Claude Code
 
@@ -125,36 +67,53 @@ claude plugin marketplace add control-decks/human-agent-control-protocol --scope
 claude plugin install hacp@hacp --scope user
 ```
 
-Use `/hacp:resolver` to explain or audit a flow, or invoke
-`/hacp:author-card` and `/hacp:author-deck` to author an artifact.
+Invoke `/hacp:protocol` directly to explain or audit HACP.
 
-## Build a deck
+## Authoring cards
 
-Start from an instruction you already repeat. Give the card one effect, one
-recognizable result, a default Binding, a duration, and clear limits. Add a
-`hacp.deck.json` manifest so other decks can identify its inputs, outputs,
-traits, and known relations.
+The plugin also exposes two human-only authoring cards:
 
-Provider projection is mechanical: `deck/card` becomes `$deck:card` in Codex
-and `/deck:card` in Claude Code. Codex displays the same card as `Deck · Card`.
-The support skills `deck`, `help`, and `resolver` are not cards and stay out of
-the HACP manifest.
+| Card | Result |
+| --- | --- |
+| `HACP AUTHOR CARD` | One complete `hacp/card-definition` |
+| `HACP AUTHOR DECK` | One complete `hacp/deck-definition` |
 
-Test the card alone, at each message position, in same-deck combos, across deck
-boundaries, and under active controls. Remove it if its result does not differ
-from normal conversation.
+Both accept an optional semantic target such as a URL, path, name, slug,
+manifest, or available Working Object. With no target they author a new
+artifact. Invocation alone never grants permission to modify files.
+
+## What makes a deck compatible
+
+A deck is a namespace, distribution unit, and coherent set of standalone
+cards. It does not carry its own resolver. Each card declares one effect,
+Binding, structural inputs, semantic preconditions, output, duration, and
+limits. Provider metadata prevents the agent from invoking cards itself.
+
+The normative [HACP Draft 0.4 specification](SPEC.md) defines the complete
+contract. `hacp.deck.json` exposes machine-readable card identities and
+interfaces.
+
+## First-party decks
+
+- [Think It Through](https://github.com/control-decks/think-it-through) develops thought.
+- [Work This Way](https://github.com/control-decks/work-this-way) sets visible session controls and acts.
+- [Reality Check](https://github.com/control-decks/reality-check) adds scoped verification annotations.
+
+Real cross-deck recipes live in deck documentation and the
+[Control Decks profile](https://github.com/control-decks). They are examples,
+not protocol dependencies.
 
 ## Boundaries
 
-HACP defines observable agent behavior. It does not provide a sandbox,
-permission system, parser, runtime, database, or transport. A conforming agent
-must honor controls such as `READ ONLY`, but HACP cannot prevent a broken or
-hostile implementation from ignoring them.
+HACP defines observable behavior. Its adapter is not a sandbox, permission
+system, parser, runtime, database, or transport. A conforming agent must honor
+controls, but HACP cannot prevent a broken or hostile implementation from
+ignoring them.
 
 ## Feedback
 
 Open a [GitHub issue](https://github.com/control-decks/human-agent-control-protocol/issues)
-when a real deck exposes an ambiguous rule or missing invariant.
+when a real card flow exposes an ambiguous rule or missing invariant.
 
 ## License
 

@@ -1,0 +1,8 @@
+interface:
+  display_name: "HACP · Protocol"
+  short_description: "Explain and audit HACP card flows"
+  icon_small: "assets/icon.png"
+  brand_color: "#C99045"
+  default_prompt: "Use $protocol to explain or audit this HACP flow."
+policy:
+  allow_implicit_invocation: false

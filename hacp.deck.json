@@ -1,8 +1,8 @@
 {
-  "hacp": "0.3",
+  "hacp": "0.4",
   "deck": {
     "id": "hacp",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "publisher": "Control Decks"
   },
   "cards": [
@@ -14,6 +14,7 @@
       "traits": ["authoring", "artifact"],
       "defaultBinding": "target-or-current-card-subject",
       "accepts": ["hacp/content", "hacp/result"],
+      "requires": ["hacp/authoring-intent"],
       "produces": "hacp/card-definition",
       "duration": "once",
       "relations": {}
@@ -26,6 +27,7 @@
       "traits": ["authoring", "artifact"],
       "defaultBinding": "target-or-current-deck-subject",
       "accepts": ["hacp/content", "hacp/result"],
+      "requires": ["hacp/authoring-intent"],
       "produces": "hacp/deck-definition",
       "duration": "once",
       "relations": {}

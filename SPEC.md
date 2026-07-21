@@ -1,114 +1,118 @@
-# Human-Agent Control Protocol, Draft 0.3
+# Human-Agent Control Protocol, Draft 0.4
 
 Status: Working draft  
-Protocol identifier: `hacp/0.3`
+Protocol identifier: `hacp/0.4`
 
-This document defines the normative behavior of HACP Draft 0.3. The key words
+This document defines the normative behavior of HACP Draft 0.4. The key words
 MUST, MUST NOT, SHOULD, SHOULD NOT, and MAY indicate requirement strength.
 
 ## 1. Scope
 
-HACP governs explicit human control of agent behavior through cards. It defines
-card identity, message position, Binding, Working Object transfer, control
-state, composition, lifecycle, and visible resolution.
+HACP governs explicit human control of agent behavior through composable cards.
+It defines invocation, ordered resolution, Binding, Working Object transfer,
+annotations, controls, lifecycle, visibility, and deck interoperability.
 
 HACP does not define transport, model APIs, tool permissions, persistent
-storage, or a security boundary.
+storage, a parser, or a security boundary.
 
 ## 2. Terms
 
 | Term | Definition |
 | --- | --- |
-| **Card** | A playable contract with one primary effect. |
-| **Deck** | A purpose, mental model, shared resolver, and set of cards. |
+| **Card** | A human-invoked command contract with one primary effect. |
+| **Deck** | A namespace, distribution unit, and coherent set of cards. |
 | **Play** | An explicit card invocation in a human message. |
+| **Protocol adapter** | The host integration that makes the HACP payload available to the agent. |
 | **Binding** | The material or scope to which a card applies. |
-| **Working Object** | The current result passed between adjacent cards. |
-| **Annotation** | Evidence or verification added without replacing the object. |
-| **Control** | Session state that permits, blocks, or delays resolution. |
+| **Working Object** | The current semantic result passed between cards. |
+| **Annotation** | Scoped information added without replacing the Working Object. |
+| **Control** | Session state that permits, blocks, delays, qualifies, or clears resolution. |
 | **Combo** | Cards resolved in one ordered message stream. |
 | **Trace** | Visible metadata naming the resolved Binding and played cards. |
-| **Clear** | Remove an active control from later resolution. |
 
-## 3. Identity and invocation
+## 3. Protocol availability
 
-Every card MUST have a canonical identifier in the form `deck/card`, such as
-`work-this-way/read-only`. Canonical identifiers remain stable across provider
-syntax and repository ownership changes.
+A session is HACP-conforming only when a compatible protocol adapter has made
+this protocol's semantics available before the first card resolves. An adapter
+MAY use a provider-native lifecycle hook, system instruction, or equivalent
+mechanism.
 
-A provider invocation is a mechanical projection of that identity:
+Loading HACP does not play a card and does not govern ordinary conversation.
+Without a played card or active control, the agent MUST respond normally and
+MUST NOT show a HACP trace.
 
-| Surface | Projection | Example |
-| --- | --- | --- |
-| Plugin namespace | `deck` | `work-this-way` |
-| Local skill folder and `name` | `card` | `read-only` |
-| Manifest `command` | `card` | `read-only` |
-| Codex invocation | `$deck:card` | `$work-this-way:read-only` |
-| Claude Code invocation | `/deck:card` | `/work-this-way:read-only` |
-| Codex display label | `Deck · Card` | `Work This Way · Read Only` |
+The canonical HACP plugin is one protocol adapter. A deck MAY be installed
+without it, but that installation MUST NOT claim full HACP conformance unless
+another compatible adapter is present.
 
-Decks MUST NOT repeat the deck slug inside the local card slug. Shared support
-skills use `deck` and `help`; the canonical HACP plugin uses `resolver`. Support
-skills are not cards and MUST NOT appear in `hacp.deck.json`.
+## 4. Identity and invocation
 
-Each Codex skill SHOULD publish `agents/openai.yaml`. Its `display_name` uses
-the table above, its `short_description` is 25–64 characters, and its
-`default_prompt` explicitly invokes `$<local-skill-name>`. Claude Code derives
-`/deck:skill` from the plugin namespace and skill `name`; decks MUST NOT add
-wrapper commands for the same card.
+Every card MUST have a stable canonical identifier in the form `deck/card`.
+Provider syntax is a mechanical projection of that identity:
 
-The agent MUST resolve explicit invocations only. It MUST NOT infer, repeat, or
-play a card from cadence, prose similarity, or a default.
+| Surface | Projection |
+| --- | --- |
+| Plugin namespace | `deck` |
+| Local skill folder and skill `name` | `card` |
+| Manifest `command` | `card` |
+| Codex invocation | `$deck:card` |
+| Claude Code invocation | `/deck:card` |
+| Codex display label | `Deck · Card` |
 
-## 4. Ordered message stream
+Cards are human-invoked commands. The agent MUST NOT infer, invoke, repeat,
+reorder, or continue a card from natural-language similarity, cadence, a
+default, or a prior play. Provider projections MUST disable implicit or
+model-initiated invocation when the provider supports that policy.
 
-A human message contains ordered prose blocks and explicit card invocations.
-The resolver MUST preserve their order.
+Support utilities such as `help` and the canonical `protocol` skill are not
+cards and MUST NOT appear in `hacp.deck.json`.
 
-1. A leading control applies prospectively.
-2. A leading operation consumes the first following prose block. If no prose
-   follows, it consumes the available Working Object or its declared default.
+## 5. Ordered message stream
+
+A human message is an ordered stream of prose blocks and explicit card plays.
+The resolver MUST preserve written order.
+
+1. A leading binding or control applies prospectively.
+2. A leading operation consumes the first following prose block. With no
+   following prose, it consumes the available Working Object or its default.
 3. A card after prose consumes the object accumulated to its left.
 4. Prose following a card adds human-authored material to the current object.
-5. The next card consumes that updated object.
+5. The next operation consumes that updated object.
+6. A presentation renders the current object but does not advance or replace
+   the semantic object consumed by a later operation.
 
-Providers MAY represent a card as a command line or an explicit skill token.
+Providers MAY render cards as commands, selected skills, or explicit tokens.
 They MUST preserve invocation order. Plain prose MUST NOT become a card.
 
-## 5. Mechanical roles
+## 6. Mechanical roles
 
-Each card declares one `kind`:
+Each card declares one `kind` and one compatible `mode`:
 
-| Kind | Required behavior |
-| --- | --- |
-| `binding` | Select or refine the Binding. |
-| `control` | Activate, qualify, or clear control state. |
-| `operation` | Transform, annotate, act, or create an artifact. |
-| `presentation` | Render the current object without changing its substance. |
+| Kind | Modes | Behavior |
+| --- | --- | --- |
+| `binding` | `select` | Select or refine the Binding. |
+| `control` | `guard`, `qualify`, `clear` | Change active control state. |
+| `operation` | `transform`, `annotate`, `action`, `artifact` | Change, annotate, act on, or materialize the object. |
+| `presentation` | `render` | Change representation without changing substance. |
 
-The optional `mode` refines the role:
+Deck-specific labels MUST map to one HACP kind and mode.
 
-- binding: `select`;
-- control: `guard`, `qualify`, or `clear`;
-- operation: `transform`, `annotate`, `action`, or `artifact`;
-- presentation: `render`.
+## 7. Binding
 
-Decks MAY define more specific semantic labels. Those labels MUST map to one
-HACP kind and mode.
+Every operation and presentation card MUST declare `defaultBinding`. The
+resolver chooses the Binding at each card position with this precedence:
 
-## 6. Binding
+1. an explicit Binding established for the card;
+2. the current Working Object and its Binding;
+3. the card's `defaultBinding`.
 
-Every operation and presentation card MUST declare a `defaultBinding`. A
-binding card overrides that value at its position in the stream.
+A default is applied directly. It MUST NOT be traced as a hidden card.
 
-The resolver applies a default directly. It MUST NOT report or trace a default
-as a hidden card play.
+A binding card acts prospectively over its combo, including a multi-exchange
+operation. A deck MAY define its own binding vocabulary, but that mental model
+MUST NOT cross a deck boundary.
 
-A Binding MAY use deck-specific language. Think It Through can expose topic,
-axis, and conversation selectors. Work This Way can bind to current work.
-Reality Check can bind to a result, claim set, artifact, or action target.
-
-## 7. Working Object
+## 8. Working Object and annotations
 
 The Working Object has this conceptual envelope:
 
@@ -117,187 +121,203 @@ binding       resolved Binding
 status        success | blocked | pending
 kind          namespaced semantic kind
 content       human-visible result
-annotations   zero or more namespaced annotations
-source        canonical identifier of the last resolved card
+annotations   zero or more scoped annotations
+source        canonical identifier of the last resolved operation
 ```
 
-This envelope defines meaning. Draft 0.3 does not require serialization.
+Each annotation has:
 
-Adjacent cards receive the Working Object automatically, including cards from
-different decks. A card MUST declare the kinds or protocol-level result family
-it accepts and one exact kind or protocol-level family it produces.
+```text
+id             namespaced annotation identifier
+binding        scope actually inspected
+traits         zero or more open semantic traits
+content        finding, evidence, or qualification
+source         canonical identifier of the annotating card
+```
 
-An annotating card MUST preserve the input kind, content, and existing
-annotations. It appends its own namespaced annotation, declares that annotation
-with `relations.addsAnnotations`, and MAY add a concise visible delta. Its
-manifest MAY use `hacp/result` as the produced family while the runtime object
-keeps its concrete input kind.
+Draft 0.4 defines meaning, not a required serialization.
 
-`blocked` and `pending` are statuses, not kinds or produced result families.
+Adjacent compatible cards receive the Working Object automatically, including
+across deck boundaries. A transformation replaces `kind` and `content`. An
+action returns its observed result. An annotation MUST preserve the input
+Binding, status, kind, content, and existing annotations, then append its own
+annotation with the Binding resolved at that card's position.
 
-Deck mental models remain private to their deck. Only the Working Object,
-resolved Binding, and active controls cross a deck boundary.
+Existing annotations are preserved by default. A card MAY invalidate or
+consume an annotation only through an explicit declared relation. Transit MUST
+NOT silently change an annotation's Binding, traits, content, or provenance.
 
-## 8. Preflight
+A presentation renders a view of the current object. Its visible result MAY be
+returned to the human, but the semantic Working Object remains available to
+later operations unchanged. For a presentation card, `produces` names the
+rendered view; it does not replace the semantic kind or content.
 
-Before applying any effect, the resolver MUST validate the complete message
-stream:
+## 9. Compatibility and preflight
 
-1. resolve each canonical card identity;
-2. validate role, position, and lifecycle use;
-3. validate `accepts` and `produces` compatibility;
-4. evaluate declared relations and active controls against the concrete
-   effects and tool calls selected for each card;
-5. detect a later control that would have changed the legality of an earlier
+Before applying any effect, the resolver MUST preflight the complete stream:
+
+1. resolve every card identity, role, position, and lifecycle;
+2. validate structural compatibility with `accepts` and `produces`;
+3. validate semantic preconditions declared by `requires`;
+4. evaluate relations and active controls against the concrete effects and
+   tool calls selected for each card;
+5. reject a later control that would have changed the legality of an earlier
    operation.
 
-The resolver MUST reject an invalid stream before applying its first effect. It
-MUST NOT reorder cards to make the stream valid.
+`accepts` describes compatible input kinds or HACP families. `requires` is an
+optional list of semantic predicates that MUST hold at resolution time.
+Shared predicates use the `hacp/*` namespace; deck-local predicates use the
+deck namespace. `produces` names one exact kind or HACP family.
 
-The resolver MUST apply controls to actual effects even when a manifest trait
-does not describe an optional delivery or access path. A card that can satisfy
-its contract without a forbidden effect SHOULD use that allowed path. For
-example, source verification under `LOCAL ONLY` can continue with local
-sources; an external lookup remains forbidden.
+An unsatisfied precondition makes the stream `invalid` unless the card's
+contract explicitly defines a pending clarification flow. The resolver MUST
+reject an invalid stream before its first effect and MUST NOT reorder cards to
+make it valid.
 
-Example: `IMPLEMENT → READ ONLY` is invalid because the late control would have
-forbidden the earlier mutation. No mutation occurs.
+Controls apply to actual effects and tool calls, not only manifest traits. A
+card that can satisfy its contract through an allowed path SHOULD use that path
+instead of failing the whole card.
 
-## 9. Resolution and status
+## 10. Resolution, status, and completion
 
-Valid streams resolve in written order. Each card receives the current Binding,
-Working Object, and active controls, then returns an updated object or state.
-
-HACP distinguishes these outcomes:
+Valid streams resolve in written order. Each card receives the current
+Binding, Working Object, and active controls.
 
 | Outcome | Meaning |
 | --- | --- |
 | `success` | The card completed and returned an object. |
-| `blocked` | A control forbade the effect; the blocked result can continue. |
-| `pending` | The effect awaits human approval. |
-| `deferred` | A later card needs a result that a pending card has not produced. |
-| `invalid` | Preflight rejected the stream; no effect occurred. |
+| `blocked` | A control forbade the effect; a safe compatible card may consume the result. |
+| `pending` | The effect awaits human approval or required input. |
+| `deferred` | A later card awaits the completed result of a pending card. |
+| `invalid` | Preflight rejected the stream before any effect. |
 
-`invalid` is not a Working Object status. It is a preflight result.
+`invalid` is a preflight result, not a Working Object status. `blocked` and
+`pending` are statuses, not result kinds.
 
-A card MAY accept `blocked` or `pending` objects. A card that requires the
-completed result of a pending operation becomes `deferred`. After approval, the
-resolver resumes at the pending operation and then resolves its deferred
-dependants.
+After approval, resolution resumes at the suspended operation and then its
+deferred dependants. Approval does not expand authority or change the original
+Binding. A changed target, mutation batch, scope, or external effect requires
+new approval.
 
-Approval never changes the original Binding or scope. If the mutation batch,
-target, or external effect changes, the resolver MUST ask again.
+Cards do not declare themselves terminal. The semantic terminal object is the
+last completed non-presentation result in the resolved stream. Presentations
+may render that object for the final visible response. A multi-exchange card
+remains active until its own completion condition, stop, or redirection.
 
-## 10. Control precedence and lifecycle
+## 11. Controls and lifecycle
 
-A blocking control wins over a control that requests approval. `READ ONLY`
-therefore blocks a mutation even when `ASK FIRST` is active.
+Controls are evaluated before domain effects and tool calls. A blocking
+control wins over a control that requests approval. Approval never bypasses a
+blocking control or higher instructions.
 
-HACP distinguishes domain mutation from control-state changes. `READ ONLY`
-MUST NOT prevent the human from clearing HACP controls.
+Control state is owned by its deck. A clear operation MUST name the owner or
+control traits it clears and MUST NOT clear another deck's state implicitly.
+Control-state changes are distinct from domain mutation, so a mutation guard
+MUST NOT prevent the human from clearing controls.
 
-Work This Way defines these Draft 0.3 controls:
+Manifest durations are:
 
-- `READ ONLY` blocks the `mutation` trait;
-- `ASK FIRST` requires approval for each described mutation batch;
-- `LOCAL ONLY` blocks external effects while allowing local alternatives;
-- `EVIDENCE REQUIRED` blocks dependent operations until the Working Object
-  carries sufficient evidence or names the missing evidence;
-- `ONCE` applies a one-completed-turn duration to controls activated in the
-  same combo;
-- `WORK CLEAR` clears all Work This Way controls and no state from another
-  deck.
+- `once`: one resolution;
+- `until-complete`: a multi-exchange operation;
+- `until-confirmed`: an artifact awaiting confirmation;
+- `until-clear`: persistent session control state.
 
-Persistent controls use `until-clear` by default. `until-clear` is a declared
-duration, not a hidden card.
+A qualifier MAY assign `one-turn` to controls activated in its combo. One turn
+is consumed only by a completed governed response; `pending`, `deferred`, and
+`invalid` do not consume it. All control state ends with the session.
 
-Manifests use `once` for a single resolution, `until-complete` for a
-multi-exchange operation, `until-confirmed` for an artifact awaiting user
-confirmation, and `until-clear` for persistent controls. `one-turn` is the
-duration assigned to controls qualified by `ONCE`; it is not a separate card.
+Before delegating governed work, the parent resolver MUST include the resolved
+Binding, current Working Object, active controls, and any pending approval
+scope in the delegated task. The `SubagentStart` payload supplies protocol
+rules, not session state. A delegate MUST apply the inherited state before its
+own effects. Delegation MUST NOT expand authority, reset a duration, consume an
+approval, or silently clear a control.
 
-A one-turn control clears after one completed governed agent turn. `blocked`
-counts as completed. `pending`, `deferred`, and `invalid` do not consume it.
-
-Control state ends with the session even if the declared duration is
-`until-clear`. HACP Draft 0.3 defines no cross-session state.
-
-## 11. Visibility and response economy
+## 12. Visibility and response economy
 
 The resolver MUST show one complete trace when a combo begins. It MUST show one
-compact active-state line on every agent turn governed by a persistent control.
+compact state line on every response governed by persistent controls.
 
-The resolver SHOULD return only the final useful Working Object. It SHOULD NOT
-print each intermediate result, restate this protocol, or explain card
-mechanics unless the user asks.
+A pending result MUST expose enough scope for informed approval. A blocked
+result MUST name the blocking control and confirm that the forbidden effect did
+not occur.
 
-A pending result MUST show the approval request and enough scope for an
-informed decision. A blocked result MUST name the blocking control and confirm
-that the forbidden effect did not occur.
+The response SHOULD contain the smallest useful final result. It SHOULD NOT
+print every intermediate object, restate this protocol, or explain mechanics
+unless the human asks.
 
-Normal conversation without a played card has no HACP trace.
+## 13. Card contract
 
-## 12. Card contract
-
-A card skill declares:
+A card skill declares this compact contract:
 
 ```text
-Use when
-Default binding
+ID
+HACP
+Kind
+Mode
+Traits
+Default Binding
 Accepts
-Effect
-Result
+Requires        optional
+Produces
 Duration
+Effect
 Limits
-Format
+Format          only when the feature requires it
+Flow            only when branching would otherwise be ambiguous
 ```
 
-`Flow` is optional. Include it only when sequence or branching would otherwise
-remain ambiguous.
+The card MUST have one primary effect. Its limits MUST prevent silent scope
+expansion and accidental authorization. A card MUST remain usable without a
+deck-wide root skill; cross-cutting HACP behavior belongs to the protocol
+adapter.
 
-The card MUST keep one primary effect. Its limits MUST prevent silent scope
-expansion and accidental authorization.
+## 14. Deck contract
 
-## 13. Deck contract
+A conforming deck defines:
 
-A deck defines:
+- one stable namespace and purpose;
+- one or more standalone card contracts;
+- `hacp.deck.json` and provider manifests;
+- installation and user documentation;
+- optional explicit `help` and optional deck-local mental model.
 
-- a purpose and deck-local mental model;
-- a shared root skill containing the minimum HACP resolver needed to remain
-  self-contained;
-- card skills and a help utility;
-- a `hacp.deck.json` manifest;
-- provider manifests and installation metadata.
+A deck MUST NOT require or ship a root resolver skill. A mental model is not a
+conformance requirement and belongs only in the cards or help surface that use
+it.
 
-The canonical HACP skill is optional. A conforming deck MUST work without a
-remote HACP dependency.
+Exact card identifiers MAY appear in same-deck relations only when they encode
+an indispensable mechanical dependency. Suggestions, sequences, and recipes
+belong in documentation. A card or manifest MUST NOT reference a card from
+another deck. Open interoperability uses kinds, HACP families, semantic
+predicates, traits, and annotation traits.
 
-## 14. Deck manifest
+## 15. Deck manifest
 
 Each deck root publishes `hacp.deck.json`:
 
 ```json
 {
-  "hacp": "0.3",
+  "hacp": "0.4",
   "deck": {
-    "id": "work-this-way",
-    "version": "0.2.0",
-    "publisher": "Control Decks"
+    "id": "example-deck",
+    "version": "0.1.0",
+    "publisher": "Example Publisher"
   },
   "cards": [
     {
-      "id": "work-this-way/read-only",
-      "command": "read-only",
-      "kind": "control",
-      "mode": "guard",
-      "traits": ["session-control"],
-      "defaultBinding": "current-work",
-      "accepts": ["hacp/result"],
-      "produces": "hacp/control-state",
-      "duration": "until-clear",
+      "id": "example-deck/inspect",
+      "command": "inspect",
+      "kind": "operation",
+      "mode": "annotate",
+      "traits": ["read-only"],
+      "defaultBinding": "current-object",
+      "accepts": ["hacp/content", "hacp/result"],
+      "requires": ["hacp/inspectable-object"],
+      "produces": "hacp/result",
+      "duration": "once",
       "relations": {
-        "references": ["work-this-way/implement"],
-        "blocksTraits": ["mutation"]
+        "addsAnnotations": ["example-deck/inspected"]
       }
     }
   ]
@@ -305,29 +325,27 @@ Each deck root publishes `hacp.deck.json`:
 ```
 
 Required fields are `hacp`, `deck.id`, `deck.version`, `deck.publisher`, and
-every card field shown above. `relations` MUST be an object. Unused relation
-arrays MAY be omitted.
+every card field shown except `requires`. `relations` MUST be an object. Unused
+relations and `requires` MAY be omitted.
 
-`produces` MUST be one string naming an exact kind or protocol-level result
-family. A status MUST NOT appear in `produces`. Annotation cards declare their
-namespaced annotations in `relations.addsAnnotations` and preserve the runtime
-object's concrete kind.
+An annotating card declares its own annotation IDs with
+`relations.addsAnnotations`. Relations MAY use open traits. They MUST NOT use a
+foreign deck's card identifier.
 
-Closed relations use canonical card identifiers. Open compatibility uses
-traits, accepted kinds, produced kinds, and annotations. A deck SHOULD NOT
-enumerate every future compatible card.
+## 16. Conformance
 
-## 15. Conformance
+An agent conforms to HACP Draft 0.4 when it:
 
-An agent conforms to HACP Draft 0.3 when it:
-
-- resolves explicit cards under this ordered grammar;
-- transfers the Working Object across deck boundaries;
-- applies active controls before tool calls or domain effects;
-- blocks forbidden effects and exposes state;
+- loads a compatible protocol payload before resolving cards;
+- resolves only cards explicitly played by the human;
+- preserves written order and preflights before effects;
+- transfers scoped Working Objects and annotations across deck boundaries;
+- applies active controls before tool calls and domain effects;
+- blocks forbidden effects and exposes useful state;
 - produces no effect for invalid streams;
-- keeps defaults and deck mental models implicit;
+- leaves normal conversation untraced;
 - returns the minimum sufficient visible result.
 
-Conformance describes behavior. It does not prove that the host can enforce
-that behavior against a faulty agent or tool.
+Conformance describes observable behavior. It does not prove that the host can
+enforce that behavior against a faulty agent or tool and does not create a
+sandbox or permission boundary.
