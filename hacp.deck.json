@@ -2,13 +2,13 @@
   "hacp": "0.3",
   "deck": {
     "id": "hacp",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "publisher": "Control Decks"
   },
   "cards": [
     {
       "id": "hacp/author-card",
-      "command": "hacp-author-card",
+      "command": "author-card",
       "kind": "operation",
       "mode": "artifact",
       "traits": ["authoring", "artifact"],
@@ -20,7 +20,7 @@
     },
     {
       "id": "hacp/author-deck",
-      "command": "hacp-author-deck",
+      "command": "author-deck",
       "kind": "operation",
       "mode": "artifact",
       "traits": ["authoring", "artifact"],

@@ -14,9 +14,9 @@ persist, block, and clear.
 Suppose `READ ONLY` is active and you ask the agent to implement a change:
 
 ```text
-$work-this-way:work-read-only
-+ $work-this-way:work-implement
-+ $think-it-through:think-explain
+$work-this-way:read-only
++ $work-this-way:implement
++ $think-it-through:explain
 ```
 
 A conforming agent blocks the mutation before calling a mutating tool, then
@@ -115,8 +115,8 @@ codex plugin marketplace add control-decks/human-agent-control-protocol
 codex plugin add hacp@hacp
 ```
 
-Use `$hacp` to explain or audit a flow, or invoke
-`$hacp:hacp-author-card` and `$hacp:hacp-author-deck` to author an artifact.
+Use `$hacp:resolver` to explain or audit a flow, or invoke
+`$hacp:author-card` and `$hacp:author-deck` to author an artifact.
 
 ### Claude Code
 
@@ -125,8 +125,8 @@ claude plugin marketplace add control-decks/human-agent-control-protocol --scope
 claude plugin install hacp@hacp --scope user
 ```
 
-Use `/hacp:hacp` to explain or audit a flow, or invoke
-`/hacp:hacp-author-card` and `/hacp:hacp-author-deck` to author an artifact.
+Use `/hacp:resolver` to explain or audit a flow, or invoke
+`/hacp:author-card` and `/hacp:author-deck` to author an artifact.
 
 ## Build a deck
 
@@ -134,6 +134,11 @@ Start from an instruction you already repeat. Give the card one effect, one
 recognizable result, a default Binding, a duration, and clear limits. Add a
 `hacp.deck.json` manifest so other decks can identify its inputs, outputs,
 traits, and known relations.
+
+Provider projection is mechanical: `deck/card` becomes `$deck:card` in Codex
+and `/deck:card` in Claude Code. Codex displays the same card as `Deck · Card`.
+The support skills `deck`, `help`, and `resolver` are not cards and stay out of
+the HACP manifest.
 
 Test the card alone, at each message position, in same-deck combos, across deck
 boundaries, and under active controls. Remove it if its result does not differ

@@ -1,6 +1,6 @@
 {
   "name": "hacp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Canonical resolver and deck-authoring guidance for the Human-Agent Control Protocol.",
   "author": {
     "name": "thevzion",
@@ -25,9 +25,9 @@
     "category": "Productivity",
     "capabilities": [],
     "defaultPrompt": [
-      "$hacp Explain this card flow.",
-      "$hacp:hacp-author-card Author a HACP card for this behavior.",
-      "$hacp:hacp-author-deck Author a HACP deck for this purpose."
+      "$hacp:resolver Explain this card flow.",
+      "$hacp:author-card Author a HACP card for this behavior.",
+      "$hacp:author-deck Author a HACP deck for this purpose."
     ]
   }
 }

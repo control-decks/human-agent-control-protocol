@@ -36,9 +36,26 @@ Every card MUST have a canonical identifier in the form `deck/card`, such as
 `work-this-way/read-only`. Canonical identifiers remain stable across provider
 syntax and repository ownership changes.
 
-A provider command is an alias. Examples include
-`$work-this-way:work-read-only` and `/work-this-way:work-read-only`. Decks MAY
-document a shorter portable form such as `/work-read-only`.
+A provider invocation is a mechanical projection of that identity:
+
+| Surface | Projection | Example |
+| --- | --- | --- |
+| Plugin namespace | `deck` | `work-this-way` |
+| Local skill folder and `name` | `card` | `read-only` |
+| Manifest `command` | `card` | `read-only` |
+| Codex invocation | `$deck:card` | `$work-this-way:read-only` |
+| Claude Code invocation | `/deck:card` | `/work-this-way:read-only` |
+| Codex display label | `Deck · Card` | `Work This Way · Read Only` |
+
+Decks MUST NOT repeat the deck slug inside the local card slug. Shared support
+skills use `deck` and `help`; the canonical HACP plugin uses `resolver`. Support
+skills are not cards and MUST NOT appear in `hacp.deck.json`.
+
+Each Codex skill SHOULD publish `agents/openai.yaml`. Its `display_name` uses
+the table above, its `short_description` is 25–64 characters, and its
+`default_prompt` explicitly invokes `$<local-skill-name>`. Claude Code derives
+`/deck:skill` from the plugin namespace and skill `name`; decks MUST NOT add
+wrapper commands for the same card.
 
 The agent MUST resolve explicit invocations only. It MUST NOT infer, repeat, or
 play a card from cadence, prose similarity, or a default.
@@ -264,13 +281,13 @@ Each deck root publishes `hacp.deck.json`:
   "hacp": "0.3",
   "deck": {
     "id": "work-this-way",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "publisher": "Control Decks"
   },
   "cards": [
     {
       "id": "work-this-way/read-only",
-      "command": "work-read-only",
+      "command": "read-only",
       "kind": "control",
       "mode": "guard",
       "traits": ["session-control"],
