@@ -24,6 +24,9 @@
     "developerName": "Control Decks",
     "category": "Productivity",
     "capabilities": [],
+    "brandColor": "#C99045",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png",
     "defaultPrompt": [
       "$hacp:resolver Explain this card flow.",
       "$hacp:author-card Author a HACP card for this behavior.",
