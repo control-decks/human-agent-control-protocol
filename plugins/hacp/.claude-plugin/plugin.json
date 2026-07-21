@@ -6,8 +6,8 @@
     "name": "thevzion",
     "url": "https://github.com/thevzion"
   },
-  "homepage": "https://github.com/control-decks/human-agent-card-protocol",
-  "repository": "https://github.com/control-decks/human-agent-card-protocol",
+  "homepage": "https://github.com/control-decks/human-agent-control-protocol",
+  "repository": "https://github.com/control-decks/human-agent-control-protocol",
   "license": "MIT",
   "keywords": [
     "agent-control",

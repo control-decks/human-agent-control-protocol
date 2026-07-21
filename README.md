@@ -9,9 +9,6 @@ acts. A card carries one reusable instruction. A deck gives related cards a
 shared purpose. HACP defines how cards bind to material, pass results, combine,
 persist, block, and clear.
 
-The repository keeps its historical `human-agent-card-protocol` slug. The
-public name is **Human-Agent Control Protocol**.
-
 ## Control you can see
 
 Suppose `READ ONLY` is active and you ask the agent to implement a change:
@@ -99,26 +96,37 @@ You can install one deck or combine several. Each deck remains self-contained.
 
 ## Optional HACP skill
 
-The `hacp` plugin supplies the canonical resolver and deck-authoring guidance.
-Decks do not require it at runtime.
+The `hacp` plugin supplies the canonical resolver, deck auditing, and two
+authoring cards. Decks do not require it at runtime.
+
+| Card | Use it to |
+| --- | --- |
+| `HACP AUTHOR CARD` | Create a card or author against an existing card or deck |
+| `HACP AUTHOR DECK` | Create a deck or author against an existing deck |
+
+Both cards accept an optional semantic target: a URL, path, name, slug,
+manifest, or available Working Object. With no target, they author a new
+artifact. The invocation alone never grants permission to modify files.
 
 ### Codex
 
 ```bash
-codex plugin marketplace add control-decks/human-agent-card-protocol
+codex plugin marketplace add control-decks/human-agent-control-protocol
 codex plugin add hacp@hacp
 ```
 
-Use `$hacp` to explain or audit a flow.
+Use `$hacp` to explain or audit a flow, or invoke
+`$hacp:hacp-author-card` and `$hacp:hacp-author-deck` to author an artifact.
 
 ### Claude Code
 
 ```bash
-claude plugin marketplace add control-decks/human-agent-card-protocol --scope user
+claude plugin marketplace add control-decks/human-agent-control-protocol --scope user
 claude plugin install hacp@hacp --scope user
 ```
 
-Use `/hacp:hacp` to explain or audit a flow.
+Use `/hacp:hacp` to explain or audit a flow, or invoke
+`/hacp:hacp-author-card` and `/hacp:hacp-author-deck` to author an artifact.
 
 ## Build a deck
 
@@ -140,7 +148,7 @@ hostile implementation from ignoring them.
 
 ## Feedback
 
-Open a [GitHub issue](https://github.com/control-decks/human-agent-card-protocol/issues)
+Open a [GitHub issue](https://github.com/control-decks/human-agent-control-protocol/issues)
 when a real deck exposes an ambiguous rule or missing invariant.
 
 ## License

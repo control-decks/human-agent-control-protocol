@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "hacp",
   "version": "0.1.0",
-  "description": "Canonical Human-Agent Control Protocol resolver and deck-authoring guidance.",
+  "description": "Canonical Human-Agent Control Protocol resolver, audit, and authoring guidance.",
   "owner": {
     "name": "Control Decks"
   },
@@ -10,13 +10,13 @@
     {
       "name": "hacp",
       "version": "0.1.0",
-      "description": "Resolve and audit HACP Draft 0.3 card flows.",
+      "description": "Resolve, audit, and author HACP Draft 0.3 card flows and decks.",
       "author": {
         "name": "thevzion"
       },
       "source": "./plugins/hacp",
       "category": "productivity",
-      "homepage": "https://github.com/control-decks/human-agent-card-protocol"
+      "homepage": "https://github.com/control-decks/human-agent-control-protocol"
     }
   ]
 }

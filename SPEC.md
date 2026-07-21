@@ -108,10 +108,15 @@ This envelope defines meaning. Draft 0.3 does not require serialization.
 
 Adjacent cards receive the Working Object automatically, including cards from
 different decks. A card MUST declare the kinds or protocol-level result family
-it accepts and the kind it produces.
+it accepts and one exact kind or protocol-level family it produces.
 
 An annotating card MUST preserve the input kind, content, and existing
-annotations. It appends its own annotation and MAY add a concise visible delta.
+annotations. It appends its own namespaced annotation, declares that annotation
+with `relations.addsAnnotations`, and MAY add a concise visible delta. Its
+manifest MAY use `hacp/result` as the produced family while the runtime object
+keeps its concrete input kind.
+
+`blocked` and `pending` are statuses, not kinds or produced result families.
 
 Deck mental models remain private to their deck. Only the Working Object,
 resolved Binding, and active controls cross a deck boundary.
@@ -124,12 +129,19 @@ stream:
 1. resolve each canonical card identity;
 2. validate role, position, and lifecycle use;
 3. validate `accepts` and `produces` compatibility;
-4. evaluate declared relations and active controls;
+4. evaluate declared relations and active controls against the concrete
+   effects and tool calls selected for each card;
 5. detect a later control that would have changed the legality of an earlier
    operation.
 
 The resolver MUST reject an invalid stream before applying its first effect. It
 MUST NOT reorder cards to make the stream valid.
+
+The resolver MUST apply controls to actual effects even when a manifest trait
+does not describe an optional delivery or access path. A card that can satisfy
+its contract without a forbidden effect SHOULD use that allowed path. For
+example, source verification under `LOCAL ONLY` can continue with local
+sources; an external lookup remains forbidden.
 
 Example: `IMPLEMENT → READ ONLY` is invalid because the late control would have
 forbidden the earlier mutation. No mutation occurs.
@@ -171,7 +183,7 @@ Work This Way defines these Draft 0.3 controls:
 
 - `READ ONLY` blocks the `mutation` trait;
 - `ASK FIRST` requires approval for each described mutation batch;
-- `LOCAL ONLY` blocks the `external-access` trait;
+- `LOCAL ONLY` blocks external effects while allowing local alternatives;
 - `EVIDENCE REQUIRED` blocks dependent operations until the Working Object
   carries sufficient evidence or names the missing evidence;
 - `ONCE` applies a one-completed-turn duration to controls activated in the
@@ -181,6 +193,11 @@ Work This Way defines these Draft 0.3 controls:
 
 Persistent controls use `until-clear` by default. `until-clear` is a declared
 duration, not a hidden card.
+
+Manifests use `once` for a single resolution, `until-complete` for a
+multi-exchange operation, `until-confirmed` for an artifact awaiting user
+confirmation, and `until-clear` for persistent controls. `one-turn` is the
+duration assigned to controls qualified by `ONCE`; it is not a separate card.
 
 A one-turn control clears after one completed governed agent turn. `blocked`
 counts as completed. `pending`, `deferred`, and `invalid` do not consume it.
@@ -273,6 +290,11 @@ Each deck root publishes `hacp.deck.json`:
 Required fields are `hacp`, `deck.id`, `deck.version`, `deck.publisher`, and
 every card field shown above. `relations` MUST be an object. Unused relation
 arrays MAY be omitted.
+
+`produces` MUST be one string naming an exact kind or protocol-level result
+family. A status MUST NOT appear in `produces`. Annotation cards declare their
+namespaced annotations in `relations.addsAnnotations` and preserve the runtime
+object's concrete kind.
 
 Closed relations use canonical card identifiers. Open compatibility uses
 traits, accepted kinds, produced kinds, and annotations. A deck SHOULD NOT

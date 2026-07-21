@@ -1,6 +1,6 @@
 ---
 name: hacp
-description: Resolve, explain, create, or audit Human-Agent Control Protocol card flows and deck contracts. Use when the user invokes HACP, combines cards from HACP decks, asks how Binding or Working Object transfer works, or needs a deck checked against HACP Draft 0.3.
+description: Resolve, explain, or audit Human-Agent Control Protocol card flows and deck contracts. Use when the user invokes HACP, combines cards from HACP decks, asks how Binding or Working Object transfer works, or needs a deck checked against HACP Draft 0.3. Delegate explicit card and deck authoring to hacp-author-card and hacp-author-deck.
 ---
 
 # HACP Resolver
@@ -39,9 +39,10 @@ Source
 Keep each deck's mental model local. Share only this object, the Binding, and
 active controls.
 
-An annotation preserves the input object. A transformation replaces its
-content and kind. An action returns the observed action result. A presentation
-changes representation without changing substance.
+An annotation preserves the input object and adds a namespaced annotation. A
+transformation replaces its content and kind. An action returns the observed
+action result. A presentation changes representation without changing
+substance. Keep `blocked` and `pending` as statuses, never result kinds.
 
 ## Outcomes
 
@@ -58,13 +59,14 @@ Never treat approval as authority to bypass a blocking control.
 
 - Let blocking controls win over approval controls.
 - Block `mutation` under `READ ONLY` before any mutating tool call.
-- Block `external` work under `LOCAL ONLY`.
+- Block external effects under `LOCAL ONLY`, but use a local path when the card
+  can still satisfy its contract locally.
 - Keep `until-clear` controls session-only.
 - Apply `ONCE` to controls activated in the same combo.
 - Let `WORK CLEAR` remove Work This Way state only.
 - Show active persistent controls on every governed response.
 
-## Author or audit a deck
+## Audit a deck
 
 Require one root skill, narrow card contracts, help, provider manifests, and
 `hacp.deck.json`. Each card declares:
