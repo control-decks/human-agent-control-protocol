@@ -1,7 +1,7 @@
 {
   "name": "hacp",
   "version": "0.3.0",
-  "description": "Canonical session protocol and deck-authoring guidance for the Human-Agent Control Protocol.",
+  "description": "Draft semantic protocol and deck-authoring guidance for explicit human control of agentic systems.",
   "author": {
     "name": "thevzion",
     "url": "https://github.com/thevzion"

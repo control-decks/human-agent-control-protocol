@@ -1,7 +1,7 @@
 {
   "name": "hacp",
   "version": "0.3.0",
-  "description": "Canonical session protocol and deck-authoring guidance for the Human-Agent Control Protocol.",
+  "description": "Draft semantic protocol and deck-authoring guidance for explicit human control of agentic systems.",
   "author": {
     "name": "thevzion",
     "url": "https://github.com/thevzion"
@@ -21,7 +21,7 @@
   "interface": {
     "displayName": "HACP",
     "shortDescription": "Load, audit, and author HACP cards.",
-    "longDescription": "The canonical Human-Agent Control Protocol session adapter for ordered card flows, deck audits, and compatible card authoring.",
+    "longDescription": "The Human-Agent Control Protocol Draft 0.4 session adapter for ordered explicit card flows, deck audits, and compatible card authoring.",
     "developerName": "Control Decks",
     "category": "Productivity",
     "capabilities": ["Instructions", "Lifecycle hooks"],

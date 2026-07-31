@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "hacp",
   "version": "0.3.0",
-  "description": "Canonical Human-Agent Control Protocol session adapter and authoring guidance.",
+  "description": "Draft semantic protocol for explicit human control of agentic systems.",
   "owner": {
     "name": "Control Decks"
   },
@@ -10,7 +10,7 @@
     {
       "name": "hacp",
       "version": "0.3.0",
-      "description": "Load, audit, and author HACP Draft 0.4 card flows and decks.",
+      "description": "Load, audit, and author explicit HACP Draft 0.4 card flows and decks.",
       "author": {
         "name": "thevzion"
       },

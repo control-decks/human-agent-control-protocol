@@ -103,12 +103,38 @@ Real cross-deck recipes live in deck documentation and the
 [Control Decks profile](https://github.com/control-decks). They are examples,
 not protocol dependencies.
 
+## A Home-first companion, not a dependency
+
+[Endroit](https://github.com/thevzion/endroit) and HACP can complement each
+other without depending on each other:
+
+```text
+Endroit  owns the durable workplace and its nouns
+HACP     owns explicitly invoked semantic moves
+Runtime  owns execution
+Human    owns direction, judgment, and promotion
+```
+
+A Home-native deck could distinguish moves that provider commands often blur
+together:
+
+```text
+/call-researcher   add an Occupant
+/work-as-engineer  adopt a Role for the current work
+/use-research      activate Equipment
+```
+
+These names are illustrative, not cards shipped by HACP or Endroit. Draft 0.4
+does not define Home-first vocabulary, and Endroit does not require HACP.
+Ordinary conversation remains the interface until a human explicitly plays a
+Card.
+
 ## Boundaries
 
 HACP defines observable behavior. Its adapter is not a sandbox, permission
-system, parser, runtime, database, or transport. A conforming agent must honor
-controls, but HACP cannot prevent a broken or hostile implementation from
-ignoring them.
+system, parser, runtime, database, transport, memory, or persistent work
+environment. A conforming agent must honor controls, but HACP cannot prevent a
+broken or hostile implementation from ignoring them.
 
 ## Feedback
 
