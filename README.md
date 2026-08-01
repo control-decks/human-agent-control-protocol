@@ -126,7 +126,7 @@ enter-the-home                 resolve and reload the Home
 enter-the-<room>-room          resolve and reload one Room
 work-on-<site>                 bind work to a Site
 call-the-researcher            add a temporary Occupant
-work-as-an-engineer            apply a Home-owned Role
+work-as-an-engineer            adopt a temporary Role for the Meeting
 use-research                   activate Home-owned Equipment
 retain-this                    retain Room-owned Material
 accept-this                    accept explicit Room truth
