@@ -115,8 +115,8 @@ Runtime  owns execution
 Human    owns direction, judgment, and promotion
 ```
 
-A companion Deck may project its stable Card capabilities into natural Endroit
-activation surfaces:
+First-party Endroit Equipment exposes the natural workplace activation
+surface:
 
 ```text
 enter-the-home                 resolve and reload the Home
@@ -134,9 +134,11 @@ archive-this                   archive Material in its owning Room
 
 These names are Endroit activation surfaces, not HACP protocol vocabulary.
 Canonical HACP identity remains `deck/card`; Endroit resolves the referenced
-Home objects and owns their lifecycle. Draft 0.4 does not require Endroit, and
-Endroit does not require HACP. Ordinary conversation remains ungoverned until
-a human explicitly plays a Card.
+Home objects and owns their lifecycle. Companion Decks may retain matching Card
+and Capability contracts for explicit composition, but must not project
+duplicate Endroit commands. Draft 0.4 does not require Endroit, and Endroit
+does not require HACP. Ordinary conversation remains ungoverned until a human
+explicitly plays a Card.
 
 ## Boundaries
 
