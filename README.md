@@ -109,25 +109,34 @@ not protocol dependencies.
 other without depending on each other:
 
 ```text
-Endroit  owns the durable workplace and its nouns
-HACP     owns explicitly invoked semantic moves
+Endroit  owns workplace nouns, bindings, and durable transitions
+HACP     owns optional explicit composition and control
 Runtime  owns execution
 Human    owns direction, judgment, and promotion
 ```
 
-A Home-native deck could distinguish moves that provider commands often blur
-together:
+A companion Deck may project its stable Card capabilities into natural Endroit
+activation surfaces:
 
 ```text
-/call-researcher   add an Occupant
-/work-as-engineer  adopt a Role for the current work
-/use-research      activate Equipment
+enter-the-home                 resolve and reload the Home
+enter-the-<room>-room          resolve and reload one Room
+work-on-<site>                 bind work to a Site
+call-the-researcher            add a temporary Occupant
+work-as-an-engineer            apply a Home-owned Role
+use-research                   activate Home-owned Equipment
+retain-this                    retain Room-owned Material
+accept-this                    accept explicit Room truth
+deliver-this                   deliver through a resolved Route
+deliver-this-to-<site>         deliver through a selected Site Route
+archive-this                   archive Material in its owning Room
 ```
 
-These names are illustrative, not cards shipped by HACP or Endroit. Draft 0.4
-does not define Home-first vocabulary, and Endroit does not require HACP.
-Ordinary conversation remains the interface until a human explicitly plays a
-Card.
+These names are Endroit activation surfaces, not HACP protocol vocabulary.
+Canonical HACP identity remains `deck/card`; Endroit resolves the referenced
+Home objects and owns their lifecycle. Draft 0.4 does not require Endroit, and
+Endroit does not require HACP. Ordinary conversation remains ungoverned until
+a human explicitly plays a Card.
 
 ## Boundaries
 

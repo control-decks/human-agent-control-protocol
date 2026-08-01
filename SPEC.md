@@ -13,7 +13,9 @@ It defines invocation, ordered resolution, Binding, Working Object transfer,
 annotations, controls, lifecycle, visibility, and deck interoperability.
 
 HACP does not define transport, model APIs, tool permissions, persistent
-storage, a parser, or a security boundary.
+storage, a parser, a durable workplace, or a security boundary. A domain
+integration owns its nouns, bindings, authorization, and lifecycle; HACP may
+compose or control explicit operations on them without taking ownership.
 
 ## 2. Terms
 
@@ -64,6 +66,12 @@ reorder, or continue a card from natural-language similarity, cadence, a
 default, or a prior play. Provider projections MUST disable implicit or
 model-initiated invocation when the provider supports that policy.
 
+A domain integration MAY expose a separate natural activation name for an
+associated capability. That name is not a HACP Card identity and MUST NOT
+change the canonical `deck/card` identifier. If the activation invokes a Card,
+it remains explicit and requires a compatible protocol adapter for HACP
+conformance.
+
 Support utilities such as `help` and the canonical `protocol` skill are not
 cards and MUST NOT appear in `hacp.deck.json`.
 
@@ -111,6 +119,10 @@ A default is applied directly. It MUST NOT be traced as a hidden card.
 A binding card acts prospectively over its combo, including a multi-exchange
 operation. A deck MAY define its own binding vocabulary, but that mental model
 MUST NOT cross a deck boundary.
+
+The HACP Binding records the scope supplied to a Card; it does not create or
+persist a domain object. The integrated domain remains authoritative for
+resolving names, ownership, and transitions.
 
 ## 8. Working Object and annotations
 
