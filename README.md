@@ -103,16 +103,19 @@ Real cross-deck recipes live in deck documentation and the
 [Control Decks profile](https://github.com/control-decks). They are examples,
 not protocol dependencies.
 
-## A Home-first companion, not a dependency
+## An Endroit companion, not a dependency
 
-[Endroit](https://github.com/thevzion/endroit) and HACP can complement each
-other without depending on each other:
+[Open Workplace](https://open-workplace.org/) proposes shared names and
+lifecycle distinctions for durable human-agent workplaces.
+[Endroit](https://github.com/thevzion/endroit) implements that model locally.
+HACP can complement Endroit without either project depending on the other:
 
 ```text
-Endroit  owns workplace nouns, bindings, and durable transitions
-HACP     owns optional explicit composition and control
-Runtime  owns execution
-Human    owns direction, judgment, and promotion
+Open Workplace  defines workplace nouns and lifecycle transitions
+Endroit          resolves concrete bindings and projects activation surfaces
+HACP             defines optional explicit verbs, composition, and control
+Runtime          owns execution
+Human            owns direction, judgment, and promotion
 ```
 
 First-party Endroit Equipment exposes the natural workplace activation
@@ -133,12 +136,12 @@ archive-this                   archive Material in its owning Room
 ```
 
 These names are Endroit activation surfaces, not HACP protocol vocabulary.
-Canonical HACP identity remains `deck/card`; Endroit resolves the referenced
-Home objects and owns their lifecycle. Companion Decks may retain matching Card
+Canonical HACP identity remains `deck/card`; Endroit resolves the concrete Home
+objects and projects their operations. Companion Decks may retain matching Card
 and Capability contracts for explicit composition, but must not project
-duplicate Endroit commands. Draft 0.4 does not require Endroit, and Endroit
-does not require HACP. Ordinary conversation remains ungoverned until a human
-explicitly plays a Card.
+duplicate Endroit commands. Draft 0.4 does not require Endroit or Open
+Workplace, and Endroit does not require HACP. Ordinary conversation remains
+ungoverned until a human explicitly plays a Card.
 
 ## Boundaries
 
