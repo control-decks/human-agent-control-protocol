@@ -4,6 +4,10 @@
 
 Draft `0.4`
 
+> **Surface:** working protocol draft `hacp/0.4` · adapter plugin `0.3.0`
+> **Owner:** Human-Agent Control Protocol · **Publisher:** Control Decks
+> **Primary action:** [Read the normative specification](SPEC.md)
+
 HACP is the semantic protocol behind Control Decks. It lets a human play
 explicit commands that bind to material, pass one Working Object, combine with
 other cards, and govern agent behavior without rewriting the same instructions.
@@ -105,7 +109,8 @@ not protocol dependencies.
 
 ## An Endroit companion, not a dependency
 
-[Open Workplace](https://open-workplace.org/) proposes shared names and
+[Open Workplace Protocol, Working Draft
+0.1](https://open-workplace.org/PROTOCOL.md) proposes shared names and
 lifecycle distinctions for durable human-agent workplaces.
 [Endroit](https://github.com/thevzion/endroit) implements that model locally.
 HACP can complement Endroit without either project depending on the other:

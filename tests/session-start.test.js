@@ -39,3 +39,14 @@ test('makes loader failures explicit', () => {
   const output = JSON.parse(hook.formatFailure('SessionStart', { PLUGIN_DATA: '/tmp/data' }));
   assert.match(output.systemMessage, /FAILED TO LOAD/);
 });
+
+test('keeps the repository landing aligned with the protocol boundary', () => {
+  const readme = fs.readFileSync(path.join(__dirname, '../README.md'), 'utf8');
+  const spec = fs.readFileSync(path.join(__dirname, '../SPEC.md'), 'utf8');
+
+  assert.match(readme, /working protocol draft `hacp\/0\.4` · adapter plugin `0\.3\.0`/);
+  assert.match(readme, /\*\*Owner:\*\* Human-Agent Control Protocol/);
+  assert.match(readme, /\[Read the normative specification\]\(SPEC\.md\)/);
+  assert.match(readme, /https:\/\/open-workplace\.org\/PROTOCOL\.md/);
+  assert.match(spec, /Protocol identifier: `hacp\/0\.4`/);
+});
