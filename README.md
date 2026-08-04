@@ -109,15 +109,16 @@ not protocol dependencies.
 
 ## An Endroit companion, not a dependency
 
-[Open Workplace Protocol, Working Draft
-0.1](https://open-workplace.org/PROTOCOL.md) proposes shared names and
-lifecycle distinctions for durable human-agent workplaces.
+[Open Workplace Protocol, Draft
+0.2](https://open-workplace.org/protocol/) defines implementation-neutral
+responsibilities and interoperability boundaries for durable human-agent
+workplaces.
 [Endroit](https://endroit.org/) is the Workplace-first application framework
 that implements that model locally.
 HACP can complement Endroit without either project depending on the other:
 
 ```text
-Open Workplace  defines workplace nouns and lifecycle transitions
+Open Workplace  defines responsibilities and interoperability boundaries
 Endroit          resolves concrete bindings and projects activation surfaces
 HACP             defines optional explicit verbs, composition, and control
 Runtime          owns execution

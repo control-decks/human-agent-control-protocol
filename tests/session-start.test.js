@@ -47,6 +47,6 @@ test('keeps the repository landing aligned with the protocol boundary', () => {
   assert.match(readme, /working protocol draft `hacp\/0\.4` · adapter plugin `0\.3\.0`/);
   assert.match(readme, /\*\*Owner:\*\* Human-Agent Control Protocol/);
   assert.match(readme, /\[Read the normative specification\]\(SPEC\.md\)/);
-  assert.match(readme, /https:\/\/open-workplace\.org\/PROTOCOL\.md/);
+  assert.match(readme, /https:\/\/open-workplace\.org\/protocol\//);
   assert.match(spec, /Protocol identifier: `hacp\/0\.4`/);
 });
